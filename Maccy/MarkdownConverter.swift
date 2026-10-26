@@ -13,12 +13,18 @@ nonisolated enum MarkdownConverter {
       return false
     }
 
-    return containsFormatting(Document(parsing: text))
+    return containsFormatting(parse(text))
   }
 
   static func html(from markdown: String) -> String {
     var converter = HTMLConverter()
-    return "<meta charset=\"utf-8\">" + converter.visit(Document(parsing: markdown))
+    return "<meta charset=\"utf-8\">" + converter.visit(parse(markdown))
+  }
+
+  // Smart punctuation would turn `--`, `...` and straight quotes into typographic
+  // characters, altering what the user copied.
+  private static func parse(_ text: String) -> Document {
+    return Document(parsing: text, options: .disableSmartOpts)
   }
 
   // NSAttributedString's HTML importer requires the main thread.
@@ -45,6 +51,9 @@ nonisolated enum MarkdownConverter {
       switch child {
       case is Paragraph, is Text, is SoftBreak, is LineBreak:
         break
+      // Raw HTML/XML on its own is not Markdown and must not be converted.
+      case is HTMLBlock, is InlineHTML:
+        continue
       case is Strong, is Emphasis, is InlineCode, is Link, is Strikethrough:
         return true
       case is BlockMarkup:
@@ -89,12 +98,7 @@ private nonisolated struct HTMLConverter: MarkupVisitor {
   }
 
   mutating func visitCodeBlock(_ codeBlock: CodeBlock) -> String {
-    var code = codeBlock.code
-    if code.hasSuffix("\n") {
-      code.removeLast()
-    }
-    let preStyle = "\(Self.codeFont) background-color: #f6f8fa; padding: 8px; white-space: pre-wrap;"
-    return "<pre style=\"\(preStyle)\"><code style=\"\(Self.codeFont)\">\(escape(code))</code></pre>"
+    return preformatted(codeBlock.code)
   }
 
   mutating func visitThematicBreak(_ thematicBreak: ThematicBreak) -> String {
@@ -102,7 +106,7 @@ private nonisolated struct HTMLConverter: MarkupVisitor {
   }
 
   mutating func visitHTMLBlock(_ html: HTMLBlock) -> String {
-    return "<p>\(escape(html.rawHTML))</p>"
+    return preformatted(html.rawHTML)
   }
 
   mutating func visitUnorderedList(_ unorderedList: UnorderedList) -> String {
@@ -120,9 +124,12 @@ private nonisolated struct HTMLConverter: MarkupVisitor {
       prefix = checkbox == .checked ? "☑ " : "☐ "
     }
 
+    // Tight items (a single paragraph, optionally followed by a nested list) are
+    // unwrapped so they render compactly; loose items keep their <p> wrappers.
+    let paragraphCount = listItem.children.filter { $0 is Paragraph }.count
     var content = ""
     for child in listItem.children {
-      if let paragraph = child as? Paragraph {
+      if paragraphCount == 1, let paragraph = child as? Paragraph {
         content += children(of: paragraph)
       } else {
         content += visit(child)
@@ -174,29 +181,52 @@ private nonisolated struct HTMLConverter: MarkupVisitor {
   }
 
   mutating func visitLink(_ link: Link) -> String {
-    guard let destination = link.destination else {
+    guard let destination = link.destination, Self.isSafeURL(destination) else {
       return children(of: link)
     }
     return "<a href=\"\(escape(destination))\">\(children(of: link))</a>"
   }
 
+  // Rendered as a link: an <img> would make NSAttributedString's HTML importer
+  // fetch the resource synchronously on the main thread.
   mutating func visitImage(_ image: Image) -> String {
-    guard let source = image.source else {
-      return escape(image.plainText)
+    let alt = escape(image.plainText)
+    guard let source = image.source, Self.isSafeURL(source) else {
+      return alt
     }
-    return "<img src=\"\(escape(source))\" alt=\"\(escape(image.plainText))\">"
+    return "<a href=\"\(escape(source))\">\(alt.isEmpty ? escape(source) : alt)</a>"
   }
 
   mutating func visitInlineHTML(_ inlineHTML: InlineHTML) -> String {
     return escape(inlineHTML.rawHTML)
   }
 
+  // Chat-style line breaks (like GitHub comments and Teams): a single newline
+  // stays a newline instead of being collapsed into a space.
   mutating func visitSoftBreak(_ softBreak: SoftBreak) -> String {
-    return "\n"
+    return "<br>"
   }
 
   mutating func visitLineBreak(_ lineBreak: LineBreak) -> String {
     return "<br>"
+  }
+
+  private static let safeSchemes: Set<String> = ["http", "https", "mailto"]
+
+  private static func isSafeURL(_ destination: String) -> Bool {
+    guard let colon = destination.firstIndex(of: ":") else {
+      return false
+    }
+    return safeSchemes.contains(destination[..<colon].lowercased())
+  }
+
+  private func preformatted(_ text: String) -> String {
+    var code = text
+    if code.hasSuffix("\n") {
+      code.removeLast()
+    }
+    let preStyle = "\(Self.codeFont) background-color: #f6f8fa; padding: 8px; white-space: pre-wrap;"
+    return "<pre style=\"\(preStyle)\"><code style=\"\(Self.codeFont)\">\(escape(code))</code></pre>"
   }
 
   private mutating func children(of markup: Markup) -> String {

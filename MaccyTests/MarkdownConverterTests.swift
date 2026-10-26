@@ -69,6 +69,56 @@ struct MarkdownConverterTests {
     #expect(!MarkdownConverter.looksLikeMarkdown(text))
   }
 
+  @Test func softBreakBecomesLineBreak() {
+    let html = MarkdownConverter.html(from: "**Datum:** 26.10.\n**Ort:** Berlin")
+    #expect(html.contains("<br"))
+  }
+
+  @Test func looseListItemKeepsParagraphsSeparate() {
+    let html = MarkdownConverter.html(from: "1. **Titel**\n\n   Erklärung")
+    #expect(html.contains("Titel"))
+    #expect(html.contains("Erklärung"))
+    #expect(!html.contains("</strong>Erklärung"))
+  }
+
+  @Test func tightListItemIsUnwrapped() {
+    let html = MarkdownConverter.html(from: "- a\n- b")
+    #expect(html.contains("<li>a</li>"))
+  }
+
+  @Test func noSmartPunctuation() {
+    let html = MarkdownConverter.html(from: "Nutze --force und \"x\" ... **fett**")
+    #expect(html.contains("--force"))
+    #expect(html.contains("&quot;x&quot;"))
+    #expect(html.contains("..."))
+  }
+
+  @Test(arguments: ["<div>\n  <b>x</b>\n</div>", "<?xml version=\"1.0\"?>\n<root>\n  <a>1</a>\n</root>", "Text mit <b>inline</b> HTML"])
+  func rejectsPureHTML(_ text: String) {
+    #expect(!MarkdownConverter.looksLikeMarkdown(text))
+  }
+
+  @Test func htmlBlockInsideMarkdownIsPreformatted() {
+    let html = MarkdownConverter.html(from: "# T\n\n<div>\n a\n</div>")
+    #expect(html.contains("<pre"))
+    #expect(html.contains("&lt;div&gt;"))
+  }
+
+  @Test func imageRendersAsLink() {
+    let html = MarkdownConverter.html(from: "![Badge](https://example.com/b.svg)")
+    #expect(!html.contains("<img"))
+    #expect(html.contains("Badge"))
+    #expect(html.contains("href=\"https://example.com/b.svg\""))
+  }
+
+  @Test func unsafeLinkSchemeHasNoHref() {
+    let html = MarkdownConverter.html(from: "[x](javascript:alert(1)) [y](mailto:a@b.de) [z](http://e.com)")
+    #expect(!html.contains("href=\"javascript"))
+    #expect(html.contains(">x<") || html.contains("x "))
+    #expect(html.contains("href=\"mailto:a@b.de\""))
+    #expect(html.contains("href=\"http://e.com\""))
+  }
+
   @MainActor @Test func richTextRoundTrip() throws {
     let contents = try #require(MarkdownConverter.richText(from: "# Größe\n\n**fett** 🎉"))
     let attributed = try #require(NSAttributedString(rtf: contents.rtf, documentAttributes: nil))
