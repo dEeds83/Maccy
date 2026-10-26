@@ -1,48 +1,82 @@
 #!/usr/bin/env bash
 # Build the fork (Release, ad-hoc signed) and install it over /Applications/Maccy.app.
-# Backs up the original app and its sandbox container once, before the first install.
+# Backs up the original App Store app and its sandbox container once, before the first install.
+# Asks for the admin password because the App Store app is owned by root.
 set -euo pipefail
 
 export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_DEST="/Applications/Maccy.app"
+APP_STAGING="/Applications/.Maccy.new.app"
 APP_BACKUP="$HOME/Applications/Maccy-2.7.1-backup.app"
 CONTAINER="$HOME/Library/Containers/org.p0deje.Maccy"
 CONTAINER_BACKUP="$HOME/Applications/Maccy-container-backup"
 BUILT_APP="$REPO_DIR/build/Build/Products/Release/Maccy.app"
+BUILD_LOG="$REPO_DIR/build/xcodebuild.log"
 
 cd "$REPO_DIR"
 
+echo "==> Requesting admin rights (needed to replace $APP_DEST)"
+sudo -v
+
 echo "==> Building Release"
-xcodebuild -project Maccy.xcodeproj -scheme Maccy -configuration Release \
+mkdir -p build
+if ! xcodebuild -project Maccy.xcodeproj -scheme Maccy -configuration Release \
   -destination 'platform=macOS' -derivedDataPath build \
-  CODE_SIGN_IDENTITY=- build | tail -n 5
+  CODE_SIGN_IDENTITY=- build >"$BUILD_LOG" 2>&1; then
+  tail -n 20 "$BUILD_LOG" >&2
+  echo "Build failed. Full log: $BUILD_LOG" >&2
+  exit 1
+fi
+tail -n 5 "$BUILD_LOG"
 
 if [[ ! -d "$BUILT_APP" ]]; then
-  echo "Build product not found: $BUILT_APP" >&2
+  echo "Build product not found: $BUILT_APP (log: $BUILD_LOG)" >&2
+  exit 1
+fi
+
+echo "==> Quitting running Maccy"
+osascript -e 'quit app "Maccy"' || true
+for _ in $(seq 1 20); do
+  pgrep -x Maccy >/dev/null || break
+  sleep 0.5
+done
+if pgrep -x Maccy >/dev/null; then
+  echo "Maccy is still running. Quit it manually and re-run. Nothing was changed." >&2
   exit 1
 fi
 
 mkdir -p "$HOME/Applications"
 
-echo "==> Quitting running Maccy"
-osascript -e 'quit app "Maccy"' || true
-sleep 2
+# Copy to a .tmp path first and move into place only after ditto succeeded,
+# so an interrupted copy is never mistaken for a complete backup.
+backup_once() {
+  local src="$1" dest="$2"
+  if [[ -e "$dest" ]]; then
+    return 0
+  fi
+  echo "==> Backing up $src to $dest"
+  rm -rf "$dest.tmp"
+  ditto "$src" "$dest.tmp"
+  mv "$dest.tmp" "$dest"
+}
 
-if [[ -d "$APP_DEST" && ! -e "$APP_BACKUP" ]]; then
-  echo "==> Backing up original app to $APP_BACKUP"
-  ditto "$APP_DEST" "$APP_BACKUP"
+if [[ -d "$APP_DEST/Contents/_MASReceipt" ]]; then
+  backup_once "$APP_DEST" "$APP_BACKUP"
+else
+  echo "==> $APP_DEST is not the App Store build (no _MASReceipt); skipping app backup"
 fi
 
-if [[ -d "$CONTAINER" && ! -e "$CONTAINER_BACKUP" ]]; then
-  echo "==> Backing up sandbox container to $CONTAINER_BACKUP"
-  ditto "$CONTAINER" "$CONTAINER_BACKUP"
+if [[ -d "$CONTAINER" ]]; then
+  backup_once "$CONTAINER" "$CONTAINER_BACKUP"
 fi
 
 echo "==> Installing to $APP_DEST"
-rm -rf "$APP_DEST"
-ditto "$BUILT_APP" "$APP_DEST"
+sudo rm -rf "$APP_STAGING"
+sudo ditto "$BUILT_APP" "$APP_STAGING"
+sudo rm -rf "$APP_DEST"
+sudo mv "$APP_STAGING" "$APP_DEST"
 
 echo "==> Launching"
 open "$APP_DEST"

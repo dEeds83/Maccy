@@ -79,7 +79,7 @@ This fork can convert Markdown on the clipboard to rich text (HTML + RTF), so ap
 scripts/install-local.sh
 ```
 
-The script builds a Release version (ad-hoc signed), backs up the original app to `~/Applications/Maccy-2.7.1-backup.app` and the sandbox container to `~/Applications/Maccy-container-backup` (once), replaces `/Applications/Maccy.app` and launches it.
+The script builds a Release version (ad-hoc signed), backs up the original app to `~/Applications/Maccy-2.7.1-backup.app` and the sandbox container to `~/Applications/Maccy-container-backup` (once), replaces `/Applications/Maccy.app` and launches it. It asks for your admin password (`sudo`) because the App Store app is owned by root. The full build log is written to `build/xcodebuild.log`.
 
 Notes:
 
