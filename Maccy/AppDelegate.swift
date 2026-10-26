@@ -53,6 +53,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
     AppState.shared.appDelegate = self
 
     Clipboard.shared.onNewCopy { History.shared.add($0) }
+    Clipboard.shared.onNewCopy { _ in AppState.shared.footer.refreshEnabled() }
     Clipboard.shared.start()
 
     Task {

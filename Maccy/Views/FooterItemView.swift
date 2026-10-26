@@ -16,7 +16,9 @@ struct FooterItemView: View {
         Text(LocalizedStringKey(item.title))
       }
     }
-    .opacity(item.isEnabled() ? 1 : 0.4)
+    .opacity(item.isEnabled ? 1 : 0.4)
+    // Also makes VoiceOver report the item as dimmed.
+    .disabled(!item.isEnabled)
     .onHover { hovering in
       if hovering && appState.preview.state.isOpen {
         appState.preview.togglePreview()

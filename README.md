@@ -70,7 +70,7 @@ brew install maccy
 This fork can convert Markdown on the clipboard to rich text (HTML + RTF), so apps like Microsoft Teams paste it formatted.
 
 * Press `⌘⇧V` in an app listed under Settings > Markdown (default: Teams) to paste the clipboard as rich text. The original clipboard content is restored afterwards and no history entry is added.
-* Or use the footer item "Markdown → Rich Text" on a history item that contains Markdown.
+* Or use the footer item "Markdown → Rich Text", which converts the current clipboard content in place (enabled only when the clipboard contains Markdown).
 * Automatic updates are disabled (the Sparkle feed is removed).
 
 ### Install locally
@@ -86,7 +86,7 @@ Notes:
 * If Maccy came from the App Store, turn off automatic App Store updates for Maccy (or ignore its updates), otherwise the fork may be overwritten.
 * Re-grant the Accessibility permission after every rebuild: remove Maccy in System Settings > Privacy & Security > Accessibility and add it again (the ad-hoc signature changes).
 * On first launch macOS may ask whether Maccy may access data from other apps. Allow it so your history is kept.
-* To go back: quit Maccy, then restore `/Applications/Maccy.app` from `~/Applications/Maccy-2.7.1-backup.app` and, if needed, `~/Library/Containers/org.p0deje.Maccy` from `~/Applications/Maccy-container-backup` (both with `ditto`).
+* To go back: quit Maccy, then restore `/Applications/Maccy.app` from `~/Applications/Maccy-2.7.1-backup.app` (needs `sudo`, e.g. `sudo rm -rf /Applications/Maccy.app && sudo ditto ~/Applications/Maccy-2.7.1-backup.app /Applications/Maccy.app`) and, if needed, `~/Library/Containers/org.p0deje.Maccy` from `~/Applications/Maccy-container-backup` (with `ditto`, no `sudo`).
 
 ## Advanced
 

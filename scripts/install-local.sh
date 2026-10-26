@@ -9,6 +9,7 @@ export DEVELOPER_DIR=/Applications/Xcode.app/Contents/Developer
 REPO_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 APP_DEST="/Applications/Maccy.app"
 APP_STAGING="/Applications/.Maccy.new.app"
+APP_OLD="/Applications/.Maccy.old.app"
 APP_BACKUP="$HOME/Applications/Maccy-2.7.1-backup.app"
 CONTAINER="$HOME/Library/Containers/org.p0deje.Maccy"
 CONTAINER_BACKUP="$HOME/Applications/Maccy-container-backup"
@@ -75,8 +76,19 @@ fi
 echo "==> Installing to $APP_DEST"
 sudo rm -rf "$APP_STAGING"
 sudo ditto "$BUILT_APP" "$APP_STAGING"
-sudo rm -rf "$APP_DEST"
-sudo mv "$APP_STAGING" "$APP_DEST"
+# Keep the old app until the new one is in place, so a failed move can be rolled back.
+sudo rm -rf "$APP_OLD"
+if [[ -e "$APP_DEST" ]]; then
+  sudo mv "$APP_DEST" "$APP_OLD"
+fi
+if ! sudo mv "$APP_STAGING" "$APP_DEST"; then
+  echo "Install failed; restoring the previous app." >&2
+  if [[ -e "$APP_OLD" ]]; then
+    sudo mv "$APP_OLD" "$APP_DEST"
+  fi
+  exit 1
+fi
+sudo rm -rf "$APP_OLD"
 
 echo "==> Launching"
 open "$APP_DEST"

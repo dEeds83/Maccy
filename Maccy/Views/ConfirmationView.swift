@@ -26,7 +26,7 @@ struct ConfirmationView<Content: View>: View {
     } else {
       content()
         .buttonAction {
-          if item.isEnabled() {
+          if item.isEnabled {
             item.action()
           }
         }

@@ -64,8 +64,11 @@ class Footer: ItemsContainer {
         isEnabled: { Clipboard.shared.canConvertMarkdown }
       ) {
         Task { @MainActor in
-          Clipboard.shared.convertMarkdownInPlace(recordInHistory: true)
-          AppState.shared.popup.close()
+          if Clipboard.shared.convertMarkdownInPlace(recordInHistory: true) {
+            AppState.shared.popup.close()
+          } else {
+            AppState.shared.footer.refreshEnabled()
+          }
         }
       },
       FooterItem(
@@ -90,5 +93,11 @@ class Footer: ItemsContainer {
         AppState.shared.quit()
       }
     ]
+  }
+
+  // Enabled states can depend on external state (e.g. the pasteboard), which
+  // SwiftUI cannot observe, so they are refreshed explicitly.
+  func refreshEnabled() {
+    items.forEach { $0.refreshEnabled() }
   }
 }
