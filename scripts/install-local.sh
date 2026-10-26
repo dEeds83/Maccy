@@ -11,7 +11,9 @@ APP_DEST="/Applications/Maccy.app"
 APP_STAGING="/Applications/.Maccy.new.app"
 APP_OLD="/Applications/.Maccy.old.app"
 APP_BACKUP="$HOME/Applications/Maccy-2.7.1-backup.app"
-CONTAINER="$HOME/Library/Containers/org.p0deje.Maccy"
+# Only the data part of the sandbox container: its root holds containermanagerd
+# metadata that macOS refuses to copy ("Operation not permitted").
+CONTAINER="$HOME/Library/Containers/org.p0deje.Maccy/Data/Library"
 CONTAINER_BACKUP="$HOME/Applications/Maccy-container-backup"
 BUILT_APP="$REPO_DIR/build/Build/Products/Release/Maccy.app"
 BUILD_LOG="$REPO_DIR/build/xcodebuild.log"

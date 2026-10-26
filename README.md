@@ -79,14 +79,14 @@ This fork can convert Markdown on the clipboard to rich text (HTML + RTF), so ap
 scripts/install-local.sh
 ```
 
-The script builds a Release version (ad-hoc signed), backs up the original app to `~/Applications/Maccy-2.7.1-backup.app` and the sandbox container to `~/Applications/Maccy-container-backup` (once), replaces `/Applications/Maccy.app` and launches it. It asks for your admin password (`sudo`) because the App Store app is owned by root. The full build log is written to `build/xcodebuild.log`.
+The script builds a Release version (ad-hoc signed), backs up the original app to `~/Applications/Maccy-2.7.1-backup.app` and the sandbox container's data (`Data/Library`: history and preferences) to `~/Applications/Maccy-container-backup` (once), replaces `/Applications/Maccy.app` and launches it. It asks for your admin password (`sudo`) because the App Store app is owned by root. The full build log is written to `build/xcodebuild.log`.
 
 Notes:
 
 * If Maccy came from the App Store, turn off automatic App Store updates for Maccy (or ignore its updates), otherwise the fork may be overwritten.
 * Re-grant the Accessibility permission after every rebuild: remove Maccy in System Settings > Privacy & Security > Accessibility and add it again (the ad-hoc signature changes).
 * On first launch macOS may ask whether Maccy may access data from other apps. Allow it so your history is kept.
-* To go back: quit Maccy, then restore `/Applications/Maccy.app` from `~/Applications/Maccy-2.7.1-backup.app` (needs `sudo`, e.g. `sudo rm -rf /Applications/Maccy.app && sudo ditto ~/Applications/Maccy-2.7.1-backup.app /Applications/Maccy.app`) and, if needed, `~/Library/Containers/org.p0deje.Maccy` from `~/Applications/Maccy-container-backup` (with `ditto`, no `sudo`).
+* To go back: quit Maccy, then restore `/Applications/Maccy.app` from `~/Applications/Maccy-2.7.1-backup.app` (needs `sudo`, e.g. `sudo rm -rf /Applications/Maccy.app && sudo ditto ~/Applications/Maccy-2.7.1-backup.app /Applications/Maccy.app`) and, if needed, `~/Library/Containers/org.p0deje.Maccy/Data/Library` from `~/Applications/Maccy-container-backup` (with `ditto`, no `sudo`).
 
 ## Advanced
 
