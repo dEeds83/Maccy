@@ -6,6 +6,7 @@ class Clipboard {
   static let shared = Clipboard()
 
   typealias OnNewCopyHook = (HistoryItem) -> Void
+  typealias Snapshot = [[NSPasteboard.PasteboardType: Data]]
 
   private var onNewCopyHooks: [OnNewCopyHook] = []
   var changeCount: Int
@@ -119,6 +120,66 @@ class Clipboard {
     }
   }
 
+  @MainActor
+  func snapshot() -> Snapshot {
+    return (pasteboard.pasteboardItems ?? []).map { item in
+      var data: [NSPasteboard.PasteboardType: Data] = [:]
+      for type in item.types {
+        data[type] = item.data(forType: type)
+      }
+      return data
+    }
+  }
+
+  @MainActor
+  func restore(_ snapshot: Snapshot) {
+    pasteboard.clearContents()
+
+    let items: [NSPasteboardItem] = snapshot.map { data in
+      let item = NSPasteboardItem()
+      for (type, value) in data {
+        item.setData(value, forType: type)
+      }
+      return item
+    }
+    if !items.isEmpty {
+      pasteboard.writeObjects(items)
+    }
+
+    changeCount = pasteboard.changeCount
+  }
+
+  @MainActor
+  var canConvertMarkdown: Bool {
+    guard let string = pasteboard.string(forType: .string) else {
+      return false
+    }
+
+    return MarkdownConverter.looksLikeMarkdown(string)
+  }
+
+  @MainActor
+  @discardableResult
+  func convertMarkdownInPlace(recordInHistory: Bool) -> Bool {
+    guard let string = pasteboard.string(forType: .string),
+          let richText = MarkdownConverter.richText(from: string) else {
+      return false
+    }
+
+    pasteboard.clearContents()
+    pasteboard.setData(richText.html, forType: .html)
+    pasteboard.setData(richText.rtf, forType: .rtf)
+    pasteboard.setString(richText.markdown, forType: .string)
+
+    if recordInHistory {
+      pasteboard.setString("", forType: .convertedFromMarkdown)
+    } else {
+      changeCount = pasteboard.changeCount
+    }
+
+    return true
+  }
+
   // Based on https://github.com/Clipy/Clipy/blob/develop/Clipy/Sources/Services/PasteService.swift.
   func paste() {
     Accessibility.check()
@@ -206,16 +267,7 @@ class Clipboard {
         return
       }
 
-      types = types
-        .subtracting(disabledTypes)
-        .filter(isPersistable)
-
-      // Avoid reading Microsoft Word links from bookmarks and cross-references.
-      // https://github.com/p0deje/Maccy/issues/613
-      // https://github.com/p0deje/Maccy/issues/770
-      if types.isSuperset(of: [.microsoftLinkSource, .microsoftObjectLink]) {
-        types = types.subtracting([.microsoftLinkSource, .microsoftObjectLink, .pdf])
-      }
+      types = typesToStore(types)
 
       types.forEach { type in
         contents.append(HistoryItemContent(type: type.rawValue, value: item.data(forType: type)))
@@ -237,6 +289,29 @@ class Clipboard {
     historyItem.title = historyItem.generateTitle()
 
     onNewCopyHooks.forEach({ $0(historyItem) })
+  }
+
+  private func typesToStore(_ types: Set<NSPasteboard.PasteboardType>) -> Set<NSPasteboard.PasteboardType> {
+    var disabledTypes = self.disabledTypes
+    // Rich text converted from Markdown in Maccy is always stored,
+    // even if HTML/RTF are disabled; the marker itself is not.
+    if types.contains(.convertedFromMarkdown) {
+      disabledTypes.subtract([.html, .rtf])
+      disabledTypes.insert(.convertedFromMarkdown)
+    }
+
+    var types = types
+      .subtracting(disabledTypes)
+      .filter(isPersistable)
+
+    // Avoid reading Microsoft Word links from bookmarks and cross-references.
+    // https://github.com/p0deje/Maccy/issues/613
+    // https://github.com/p0deje/Maccy/issues/770
+    if types.isSuperset(of: [.microsoftLinkSource, .microsoftObjectLink]) {
+      types = types.subtracting([.microsoftLinkSource, .microsoftObjectLink, .pdf])
+    }
+
+    return types
   }
 
   private func shouldIgnore(_ types: Set<NSPasteboard.PasteboardType>) -> Bool {
