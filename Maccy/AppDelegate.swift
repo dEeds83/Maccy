@@ -6,6 +6,7 @@ import SwiftUI
 class AppDelegate: NSObject, NSApplicationDelegate {
   nonisolated static let isTesting = CommandLine.arguments.contains("enable-testing")
   var panel: FloatingPanel<ContentView>!
+  private var markdownPasteHotKey: MarkdownPasteHotKey?
 
   @objc
   private lazy var statusItem: NSStatusItem = {
@@ -109,6 +110,7 @@ class AppDelegate: NSObject, NSApplicationDelegate {
   func applicationDidFinishLaunching(_ aNotification: Notification) {
     migrateUserDefaults()
     disableUnusedGlobalHotkeys()
+    markdownPasteHotKey = MarkdownPasteHotKey()
 
     panel = FloatingPanel(
       contentRect: NSRect(origin: .zero, size: Defaults[.windowSize]),

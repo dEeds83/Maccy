@@ -61,6 +61,8 @@
 		DA083A6E2C42E8E8004259A0 /* NSImage+Resized.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA083A6D2C42E8E8004259A0 /* NSImage+Resized.swift */; };
 		DA0EE7B9204657830025FC60 /* MaccyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0EE7B8204657830025FC60 /* MaccyUITests.swift */; };
 		AB1000012F00000100A1B2C3 /* MarkdownConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1000022F00000100A1B2C3 /* MarkdownConverter.swift */; };
+		AB1000082F00000100A1B2C3 /* MarkdownPasteHotKey.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1000092F00000100A1B2C3 /* MarkdownPasteHotKey.swift */; };
+		AB10000A2F00000100A1B2C3 /* MarkdownPasteHotKeyTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB10000B2F00000100A1B2C3 /* MarkdownPasteHotKeyTests.swift */; };
 		AB1000032F00000100A1B2C3 /* MarkdownConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1000042F00000100A1B2C3 /* MarkdownConverterTests.swift */; };
 		AB1000052F00000100A1B2C3 /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = AB1000062F00000100A1B2C3 /* Markdown */; };
 		DA0EF1881E444B2A00E58577 /* Clipboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0EF1871E444B2A00E58577 /* Clipboard.swift */; };
@@ -298,6 +300,8 @@
 		DA0EE7B8204657830025FC60 /* MaccyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaccyUITests.swift; sourceTree = "<group>"; };
 		AB1000022F00000100A1B2C3 /* MarkdownConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownConverter.swift; sourceTree = "<group>"; };
 		AB1000042F00000100A1B2C3 /* MarkdownConverterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownConverterTests.swift; sourceTree = "<group>"; };
+		AB1000092F00000100A1B2C3 /* MarkdownPasteHotKey.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownPasteHotKey.swift; sourceTree = "<group>"; };
+		AB10000B2F00000100A1B2C3 /* MarkdownPasteHotKeyTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownPasteHotKeyTests.swift; sourceTree = "<group>"; };
 		DA0EF1871E444B2A00E58577 /* Clipboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Clipboard.swift; sourceTree = "<group>"; };
 		DA0FFA292C8D0FEC00A66C97 /* ModifierFlags+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModifierFlags+Description.swift"; sourceTree = "<group>"; };
 		DA13D7D12C19F91B00FA9E23 /* Defaults.Keys+Names.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults.Keys+Names.swift"; sourceTree = "<group>"; };
@@ -788,6 +792,7 @@
 				DA48AE852A5F0077006D4894 /* Fixtures */,
 				DA3CE7FF1E44A62500B3AA98 /* ClipboardTests.swift */,
 				AB1000042F00000100A1B2C3 /* MarkdownConverterTests.swift */,
+				AB10000B2F00000100A1B2C3 /* MarkdownPasteHotKeyTests.swift */,
 				CA110ED10000000000000002 /* CollectionSurroundingTests.swift */,
 				C0FFEE000000000000000004 /* ShortenedTests.swift */,
 				FFFC00000000000000000004 /* UnsafeForTitleLayoutTests.swift */,
@@ -894,6 +899,7 @@
 				DA555F072CF0F98F009608BD /* ApplicationImageCache.swift */,
 				DA0EF1871E444B2A00E58577 /* Clipboard.swift */,
 				AB1000022F00000100A1B2C3 /* MarkdownConverter.swift */,
+				AB1000092F00000100A1B2C3 /* MarkdownPasteHotKey.swift */,
 				DAE284FF232257D20080E394 /* ColorImage.swift */,
 				2F8A0DBD303A1F9D004BA51F /* ConcatenatedCollection.swift */,
 				DAA54BF92C3C951900B7FDD8 /* FloatingPanel.swift */,
@@ -1145,6 +1151,7 @@
 				DAFE2DE9268A9B1B00990986 /* HistoryItemTests.swift in Sources */,
 				DA3CE8001E44A62500B3AA98 /* ClipboardTests.swift in Sources */,
 				AB1000032F00000100A1B2C3 /* MarkdownConverterTests.swift in Sources */,
+				AB10000A2F00000100A1B2C3 /* MarkdownPasteHotKeyTests.swift in Sources */,
 				4CB7148130897A9E00A357EC /* SharedStateTests.swift in Sources */,
 				DA1EDE432045B35300479723 /* HistoryDecoratorTests.swift in Sources */,
 				DAE2850223225BD90080E394 /* ColorImageTests.swift in Sources */,
@@ -1212,6 +1219,7 @@
 				DA1969122C3F0DD200258481 /* HistoryItemView.swift in Sources */,
 				DA0EF1881E444B2A00E58577 /* Clipboard.swift in Sources */,
 				AB1000012F00000100A1B2C3 /* MarkdownConverter.swift in Sources */,
+				AB1000082F00000100A1B2C3 /* MarkdownPasteHotKey.swift in Sources */,
 				DA3F1B452C90084600267632 /* Sauce+KeyboardShortcuts.swift in Sources */,
 				DA689FCC2C1D1D510009B887 /* MenuIcon.swift in Sources */,
 				2FD499452FFC489400149F02 /* MovableByWindowBackgroundModifier.swift in Sources */,
