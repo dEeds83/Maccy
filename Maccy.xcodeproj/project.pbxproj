@@ -60,6 +60,9 @@
 		C5B760C9035C4B3594C47811 /* SizedString.swift in Sources */ = {isa = PBXBuildFile; fileRef = DFC13FFCB59043F2883A4437 /* SizedString.swift */; };
 		DA083A6E2C42E8E8004259A0 /* NSImage+Resized.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA083A6D2C42E8E8004259A0 /* NSImage+Resized.swift */; };
 		DA0EE7B9204657830025FC60 /* MaccyUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0EE7B8204657830025FC60 /* MaccyUITests.swift */; };
+		AB1000012F00000100A1B2C3 /* MarkdownConverter.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1000022F00000100A1B2C3 /* MarkdownConverter.swift */; };
+		AB1000032F00000100A1B2C3 /* MarkdownConverterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB1000042F00000100A1B2C3 /* MarkdownConverterTests.swift */; };
+		AB1000052F00000100A1B2C3 /* Markdown in Frameworks */ = {isa = PBXBuildFile; productRef = AB1000062F00000100A1B2C3 /* Markdown */; };
 		DA0EF1881E444B2A00E58577 /* Clipboard.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0EF1871E444B2A00E58577 /* Clipboard.swift */; };
 		DA0FFA2A2C8D100C00A66C97 /* ModifierFlags+Description.swift in Sources */ = {isa = PBXBuildFile; fileRef = DA0FFA292C8D0FEC00A66C97 /* ModifierFlags+Description.swift */; };
 		DA13D7CA2C19F52B00FA9E23 /* LaunchAtLogin in Frameworks */ = {isa = PBXBuildFile; productRef = DA13D7C92C19F52B00FA9E23 /* LaunchAtLogin */; };
@@ -293,6 +296,8 @@
 		DA0D57852E424784005101AF /* vi */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = vi; path = vi.lproj/Localizable.strings; sourceTree = "<group>"; };
 		DA0EE7B6204657830025FC60 /* MaccyUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = MaccyUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA0EE7B8204657830025FC60 /* MaccyUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MaccyUITests.swift; sourceTree = "<group>"; };
+		AB1000022F00000100A1B2C3 /* MarkdownConverter.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownConverter.swift; sourceTree = "<group>"; };
+		AB1000042F00000100A1B2C3 /* MarkdownConverterTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MarkdownConverterTests.swift; sourceTree = "<group>"; };
 		DA0EF1871E444B2A00E58577 /* Clipboard.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = Clipboard.swift; sourceTree = "<group>"; };
 		DA0FFA292C8D0FEC00A66C97 /* ModifierFlags+Description.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "ModifierFlags+Description.swift"; sourceTree = "<group>"; };
 		DA13D7D12C19F91B00FA9E23 /* Defaults.Keys+Names.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Defaults.Keys+Names.swift"; sourceTree = "<group>"; };
@@ -636,6 +641,7 @@
 				2F12271E2E5C932200A1592A /* Logging in Frameworks */,
 				DA13D7D02C19F8C300FA9E23 /* Defaults in Frameworks */,
 				DA009947256414800030E697 /* SwiftHEXColors in Frameworks */,
+				AB1000052F00000100A1B2C3 /* Markdown in Frameworks */,
 				DA5154D82564102900C01004 /* Sauce in Frameworks */,
 				2F39CB0A2AD9AE1F00B749FD /* Settings in Frameworks */,
 				DA13D7CA2C19F52B00FA9E23 /* LaunchAtLogin in Frameworks */,
@@ -781,6 +787,7 @@
 			children = (
 				DA48AE852A5F0077006D4894 /* Fixtures */,
 				DA3CE7FF1E44A62500B3AA98 /* ClipboardTests.swift */,
+				AB1000042F00000100A1B2C3 /* MarkdownConverterTests.swift */,
 				CA110ED10000000000000002 /* CollectionSurroundingTests.swift */,
 				C0FFEE000000000000000004 /* ShortenedTests.swift */,
 				FFFC00000000000000000004 /* UnsafeForTitleLayoutTests.swift */,
@@ -886,6 +893,7 @@
 				2FB5BC9F2CD8F73C008B33F4 /* ApplicationImage.swift */,
 				DA555F072CF0F98F009608BD /* ApplicationImageCache.swift */,
 				DA0EF1871E444B2A00E58577 /* Clipboard.swift */,
+				AB1000022F00000100A1B2C3 /* MarkdownConverter.swift */,
 				DAE284FF232257D20080E394 /* ColorImage.swift */,
 				2F8A0DBD303A1F9D004BA51F /* ConcatenatedCollection.swift */,
 				DAA54BF92C3C951900B7FDD8 /* FloatingPanel.swift */,
@@ -974,6 +982,7 @@
 			packageProductDependencies = (
 				DA5154D72564102900C01004 /* Sauce */,
 				DA009946256414800030E697 /* SwiftHEXColors */,
+				AB1000062F00000100A1B2C3 /* Markdown */,
 				DA009954256414E60030E697 /* KeyboardShortcuts */,
 				2F39CB032AD9A93C00B749FD /* Sparkle */,
 				2F39CB092AD9AE1F00B749FD /* Settings */,
@@ -1060,6 +1069,7 @@
 			packageReferences = (
 				DA5154D62564102900C01004 /* XCRemoteSwiftPackageReference "Sauce" */,
 				DA009945256414800030E697 /* XCRemoteSwiftPackageReference "SwiftHEXColors" */,
+				AB1000072F00000100A1B2C3 /* XCRemoteSwiftPackageReference "swift-markdown" */,
 				DA009953256414E60030E697 /* XCRemoteSwiftPackageReference "KeyboardShortcuts" */,
 				2F39CB022AD9A93C00B749FD /* XCRemoteSwiftPackageReference "Sparkle" */,
 				2F39CB082AD9AE1F00B749FD /* XCRemoteSwiftPackageReference "Settings" */,
@@ -1134,6 +1144,7 @@
 			files = (
 				DAFE2DE9268A9B1B00990986 /* HistoryItemTests.swift in Sources */,
 				DA3CE8001E44A62500B3AA98 /* ClipboardTests.swift in Sources */,
+				AB1000032F00000100A1B2C3 /* MarkdownConverterTests.swift in Sources */,
 				4CB7148130897A9E00A357EC /* SharedStateTests.swift in Sources */,
 				DA1EDE432045B35300479723 /* HistoryDecoratorTests.swift in Sources */,
 				DAE2850223225BD90080E394 /* ColorImageTests.swift in Sources */,
@@ -1200,6 +1211,7 @@
 				DAA5ACB22C1B3F8800B58513 /* GeneralSettingsPane.swift in Sources */,
 				DA1969122C3F0DD200258481 /* HistoryItemView.swift in Sources */,
 				DA0EF1881E444B2A00E58577 /* Clipboard.swift in Sources */,
+				AB1000012F00000100A1B2C3 /* MarkdownConverter.swift in Sources */,
 				DA3F1B452C90084600267632 /* Sauce+KeyboardShortcuts.swift in Sources */,
 				DA689FCC2C1D1D510009B887 /* MenuIcon.swift in Sources */,
 				2FD499452FFC489400149F02 /* MovableByWindowBackgroundModifier.swift in Sources */,
@@ -1978,6 +1990,14 @@
 				minimumVersion = 3.1.2;
 			};
 		};
+		AB1000072F00000100A1B2C3 /* XCRemoteSwiftPackageReference "swift-markdown" */ = {
+			isa = XCRemoteSwiftPackageReference;
+			repositoryURL = "https://github.com/swiftlang/swift-markdown";
+			requirement = {
+				kind = upToNextMajorVersion;
+				minimumVersion = 0.9.0;
+			};
+		};
 		DA009945256414800030E697 /* XCRemoteSwiftPackageReference "SwiftHEXColors" */ = {
 			isa = XCRemoteSwiftPackageReference;
 			repositoryURL = "https://github.com/thii/SwiftHEXColors";
@@ -2043,6 +2063,11 @@
 			isa = XCSwiftPackageProductDependency;
 			package = 2F39CB082AD9AE1F00B749FD /* XCRemoteSwiftPackageReference "Settings" */;
 			productName = Settings;
+		};
+		AB1000062F00000100A1B2C3 /* Markdown */ = {
+			isa = XCSwiftPackageProductDependency;
+			package = AB1000072F00000100A1B2C3 /* XCRemoteSwiftPackageReference "swift-markdown" */;
+			productName = Markdown;
 		};
 		DA009946256414800030E697 /* SwiftHEXColors */ = {
 			isa = XCSwiftPackageProductDependency;
