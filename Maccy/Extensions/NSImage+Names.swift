@@ -6,6 +6,8 @@ extension NSImage {
   static let paintpalette = NSImage(systemSymbolName: "paintpalette", accessibilityDescription: "paintpalette")
   static let nosign = NSImage(systemSymbolName: "nosign", accessibilityDescription: "nosign")
   static let gearshape2 = NSImage(systemSymbolName: "gearshape.2", accessibilityDescription: "gearshape2")
+  static let textBadgeCheckmark = NSImage(
+    systemSymbolName: "text.badge.checkmark", accessibilityDescription: "text.badge.checkmark")
 }
 
 extension NSImage.Name {

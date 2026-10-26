@@ -65,6 +65,29 @@ brew install maccy
 11. To ignore only the next copy, click on the menu icon with <kbd>OPTION (⌥)</kbd> + <kbd>SHIFT (⇧)</kbd> pressed.
 12. To customize the behavior, check "Preferences…" window, or press <kbd>COMMAND (⌘)</kbd> + <kbd>,</kbd>.
 
+## Fork: Markdown to Rich Text
+
+This fork can convert Markdown on the clipboard to rich text (HTML + RTF), so apps like Microsoft Teams paste it formatted.
+
+* Press `⌘⇧V` in an app listed under Settings > Markdown (default: Teams) to paste the clipboard as rich text. The original clipboard content is restored afterwards and no history entry is added.
+* Or use the footer item "Markdown → Rich Text", which converts the current clipboard content in place (enabled only when the clipboard contains Markdown).
+* Automatic updates are disabled (the Sparkle feed is removed).
+
+### Install locally
+
+```sh
+scripts/install-local.sh
+```
+
+The script builds a Release version (ad-hoc signed, hardened runtime off — with an ad-hoc signature library validation would refuse the embedded Sparkle.framework and the app would crash at launch), backs up the original app to `~/Applications/Maccy-2.7.1-backup.app` and the sandbox container's data (`Data/Library`: history and preferences) to `~/Applications/Maccy-container-backup` (once), replaces `/Applications/Maccy.app` and launches it. It asks for your admin password (`sudo`) because the App Store app is owned by root. The full build log is written to `build/xcodebuild.log`.
+
+Notes:
+
+* If Maccy came from the App Store, turn off automatic App Store updates for Maccy (or ignore its updates), otherwise the fork may be overwritten.
+* Re-grant the Accessibility permission after every rebuild: run `tccutil reset Accessibility org.p0deje.Maccy`, then add Maccy again in System Settings > Privacy & Security > Accessibility and restart it (the ad-hoc signature changes; a stale entry can stay switched on without applying).
+* On first launch macOS may ask whether Maccy may access data from other apps. Allow it so your history is kept.
+* To go back: quit Maccy, then restore `/Applications/Maccy.app` from `~/Applications/Maccy-2.7.1-backup.app` (needs `sudo`, e.g. `sudo rm -rf /Applications/Maccy.app && sudo ditto ~/Applications/Maccy-2.7.1-backup.app /Applications/Maccy.app`) and, if needed, `~/Library/Containers/org.p0deje.Maccy/Data/Library` from `~/Applications/Maccy-container-backup` (with `ditto`, no `sudo`).
+
 ## Advanced
 
 ### Ignore Copied Items

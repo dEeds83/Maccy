@@ -59,6 +59,19 @@ class Footer: ItemsContainer {
         }
       },
       FooterItem(
+        title: "convert_markdown",
+        help: "convert_markdown_tooltip",
+        isEnabled: { Clipboard.shared.canConvertMarkdown }
+      ) {
+        Task { @MainActor in
+          if Clipboard.shared.convertMarkdownInPlace(recordInHistory: true) {
+            AppState.shared.popup.close()
+          } else {
+            AppState.shared.footer.refreshEnabled()
+          }
+        }
+      },
+      FooterItem(
         title: "preferences",
         shortcuts: [KeyShortcut(key: .comma)]
       ) {
@@ -80,5 +93,11 @@ class Footer: ItemsContainer {
         AppState.shared.quit()
       }
     ]
+  }
+
+  // Enabled states can depend on external state (e.g. the pasteboard), which
+  // SwiftUI cannot observe, so they are refreshed explicitly.
+  func refreshEnabled() {
+    items.forEach { $0.refreshEnabled() }
   }
 }

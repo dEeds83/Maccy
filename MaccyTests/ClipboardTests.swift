@@ -301,6 +301,50 @@ extension SharedStateTests {
       #expect(Set(copied.contents.map(\.type)) == [stringType.rawValue])
     }
 
+    @Test("Snapshot and restore keep all types without new copy")
+    func snapshotRestore() async throws {
+      pasteboard.clearContents()
+      pasteboard.setString("<b>x</b>", forType: .html)
+      pasteboard.setString("x", forType: .string)
+      clipboard.checkForChangesInPasteboard()
+      let snap = clipboard.snapshot()
+      pasteboard.clearContents(); pasteboard.setString("other", forType: .string)
+      clipboard.checkForChangesInPasteboard()
+      let copies = try await waitForCopies(expectingCopy: false, after: { clipboard.restore(snap) })
+      #expect(copies.isEmpty)
+      #expect(pasteboard.string(forType: .html) == "<b>x</b>")
+      #expect(pasteboard.string(forType: .string) == "x")
+    }
+
+    @Test("Convert in place records html and rtf even if disabled")
+    func convertInPlaceForcesRichTypes() async throws {
+      Defaults[.enabledPasteboardTypes] = [.string]
+      pasteboard.clearContents(); pasteboard.setString("# Titel", forType: .string)
+      clipboard.checkForChangesInPasteboard()
+      let copies = try await waitForCopies(after: { clipboard.convertMarkdownInPlace(recordInHistory: true) })
+      let types = Set(try #require(copies.first).contents.map(\.type))
+      #expect(types.isSuperset(of: [NSPasteboard.PasteboardType.html.rawValue, NSPasteboard.PasteboardType.rtf.rawValue]))
+      #expect(!types.contains(NSPasteboard.PasteboardType.convertedFromMarkdown.rawValue))
+    }
+
+    @Test("Convert in place replaces existing html")
+    func convertReplacesHTML() {
+      pasteboard.clearContents()
+      pasteboard.setString("<span>vscode</span>", forType: .html)
+      pasteboard.setString("**fett**", forType: .string)
+      #expect(clipboard.convertMarkdownInPlace(recordInHistory: false))
+      #expect(pasteboard.string(forType: .html)?.contains("<strong>fett</strong>") == true)
+      #expect(pasteboard.string(forType: .string) == "**fett**")
+    }
+
+    @Test("Convert in place is a no-op for plain text")
+    func convertPlainText() {
+      pasteboard.clearContents(); pasteboard.setString("Hallo", forType: .string)
+      #expect(!clipboard.canConvertMarkdown)
+      #expect(!clipboard.convertMarkdownInPlace(recordInHistory: false))
+      #expect(pasteboard.string(forType: .html) == nil)
+    }
+
     private func waitForCopies(expectingCopy: Bool = true, after trigger: () -> Void) async throws -> [HistoryItem] {
       var copies: [HistoryItem] = []
       clipboard.onNewCopy { copies.append($0) }

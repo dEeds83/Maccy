@@ -23,6 +23,9 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
   var showConfirmation: Bool = false
   var suppressConfirmation: Binding<Bool>?
   var isVisible: Bool = true
+  // Stored so SwiftUI observes it; refreshed from `enabledCheck` via `refreshEnabled()`.
+  private(set) var isEnabled: Bool = true
+  @ObservationIgnored private let enabledCheck: () -> Bool
   var action: () -> Void
 
   init(
@@ -31,6 +34,7 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
     help: LocalizedStringKey? = nil,
     confirmation: Confirmation? = nil,
     suppressConfirmation: Binding<Bool>? = nil,
+    isEnabled: @escaping () -> Bool = { true },
     action: @escaping () -> Void
   ) {
     self.title = title
@@ -38,6 +42,15 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
     self.help = help
     self.confirmation = confirmation
     self.suppressConfirmation = suppressConfirmation
+    self.enabledCheck = isEnabled
     self.action = action
+    refreshEnabled()
+  }
+
+  func refreshEnabled() {
+    let enabled = enabledCheck()
+    if isEnabled != enabled {
+      isEnabled = enabled
+    }
   }
 }
