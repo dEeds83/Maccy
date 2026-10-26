@@ -1,3 +1,4 @@
+import AppKit
 import Testing
 @testable import Maccy
 
@@ -66,5 +67,19 @@ struct MarkdownConverterTests {
   @Test(arguments: ["Hallo Welt", "Preis: 5 * 3 = 15", "Ticket #123 ist erledigt", "a_b_c", "", "   "])
   func rejectsPlainText(_ text: String) {
     #expect(!MarkdownConverter.looksLikeMarkdown(text))
+  }
+
+  @MainActor @Test func richTextRoundTrip() throws {
+    let contents = try #require(MarkdownConverter.richText(from: "# Größe\n\n**fett** 🎉"))
+    let attributed = try #require(NSAttributedString(rtf: contents.rtf, documentAttributes: nil))
+    #expect(attributed.string.contains("Größe"))
+    #expect(attributed.string.contains("fett"))
+    #expect(!attributed.string.contains("**"))
+    #expect(String(data: contents.html, encoding: .utf8)?.contains("<h1") == true)
+    #expect(contents.markdown == "# Größe\n\n**fett** 🎉")
+  }
+
+  @MainActor @Test func richTextNilForPlainText() {
+    #expect(MarkdownConverter.richText(from: "Hallo Welt") == nil)
   }
 }

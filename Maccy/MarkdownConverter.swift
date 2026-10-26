@@ -1,4 +1,11 @@
+import AppKit
 import Markdown
+
+nonisolated struct RichTextContents {
+  let html: Data
+  let rtf: Data
+  let markdown: String
+}
 
 nonisolated enum MarkdownConverter {
   static func looksLikeMarkdown(_ text: String) -> Bool {
@@ -12,6 +19,25 @@ nonisolated enum MarkdownConverter {
   static func html(from markdown: String) -> String {
     var converter = HTMLConverter()
     return "<meta charset=\"utf-8\">" + converter.visit(Document(parsing: markdown))
+  }
+
+  // NSAttributedString's HTML importer requires the main thread.
+  @MainActor
+  static func richText(from markdown: String) -> RichTextContents? {
+    guard looksLikeMarkdown(markdown) else {
+      return nil
+    }
+
+    guard let html = html(from: markdown).data(using: .utf8),
+          let attributed = NSAttributedString(html: html, documentAttributes: nil),
+          let rtf = try? attributed.data(
+            from: NSRange(location: 0, length: attributed.length),
+            documentAttributes: [.documentType: NSAttributedString.DocumentType.rtf]
+          ) else {
+      return nil
+    }
+
+    return RichTextContents(html: html, rtf: rtf, markdown: markdown)
   }
 
   private static func containsFormatting(_ markup: Markup) -> Bool {

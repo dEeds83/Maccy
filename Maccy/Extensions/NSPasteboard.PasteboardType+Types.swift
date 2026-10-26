@@ -18,6 +18,9 @@ nonisolated extension NSPasteboard.PasteboardType: Defaults.Serializable {
   // Marks that copy was made from Maccy.
   static let fromMaccy = NSPasteboard.PasteboardType(rawValue: "org.p0deje.Maccy")
 
+  // Marks that Maccy converted Markdown text to rich text.
+  static let convertedFromMarkdown = NSPasteboard.PasteboardType(rawValue: "org.p0deje.Maccy.markdown-converted")
+
   // Types that indicate Microsoft Word bookmarks (links).
   static let microsoftObjectLink = NSPasteboard.PasteboardType(rawValue: "com.microsoft.ObjectLink")
   static let microsoftLinkSource = NSPasteboard.PasteboardType(rawValue: "com.microsoft.Link-Source")
