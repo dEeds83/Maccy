@@ -92,6 +92,12 @@ if ! sudo mv "$APP_STAGING" "$APP_DEST"; then
 fi
 sudo rm -rf "$APP_OLD"
 
+# Forget the build-directory copy so macOS launches /Applications/Maccy.app
+# (its Accessibility grant is tied to that path).
+LSREGISTER=/System/Library/Frameworks/CoreServices.framework/Frameworks/LaunchServices.framework/Support/lsregister
+"$LSREGISTER" -u "$BUILT_APP" || true
+"$LSREGISTER" -f "$APP_DEST" || true
+
 echo "==> Launching"
 open "$APP_DEST"
 

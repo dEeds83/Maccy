@@ -17,6 +17,30 @@ final class MarkdownPasteHotKey {
     return Defaults[.markdownApps].contains(bundleIdentifier)
   }
 
+  // Polls until `modifiersHeld` returns false or the timeout elapses.
+  // Returns whether the modifiers were released in time.
+  static func waitForModifierRelease(
+    timeout: Duration = .seconds(1),
+    pollInterval: Duration = .milliseconds(10),
+    modifiersHeld: () -> Bool = modifierKeysHeld
+  ) async -> Bool {
+    let deadline = ContinuousClock.now + timeout
+    while modifiersHeld() {
+      guard ContinuousClock.now < deadline else {
+        return false
+      }
+      try? await Task.sleep(for: pollInterval)
+    }
+    return true
+  }
+
+  // The hotkey fires while ⌘⇧ are still physically held. A synthetic ⌘V posted
+  // at that moment reaches apps like Teams as ⌘⇧V and is ignored.
+  nonisolated private static func modifierKeysHeld() -> Bool {
+    let flags = CGEventSource.flagsState(.combinedSessionState)
+    return !flags.intersection([.maskCommand, .maskShift, .maskAlternate, .maskControl]).isEmpty
+  }
+
   private let restoreDelay: Duration
   private var isPasting = false
   private var activationObserver: NSObjectProtocol?
@@ -69,6 +93,9 @@ final class MarkdownPasteHotKey {
 
     isPasting = true
     defer { isPasting = false }
+
+    // A paste is attempted even if the keys are still held after the timeout.
+    _ = await Self.waitForModifierRelease()
 
     let clipboard = Clipboard.shared
     let snapshot = clipboard.snapshot()
