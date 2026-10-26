@@ -5,5 +5,6 @@ extension Settings.PaneIdentifier {
   static let appearance = Self("appearance")
   static let general = Self("general")
   static let ignore = Self("ignore")
+  static let markdown = Self("markdown")
   static let storage = Self("storage")
 }

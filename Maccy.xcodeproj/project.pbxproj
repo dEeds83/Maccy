@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		A60000010000000000000002 /* MarkdownSettingsPane.swift in Sources */ = {isa = PBXBuildFile; fileRef = A60000010000000000000001 /* MarkdownSettingsPane.swift */; };
+		A60000010000000000000006 /* MarkdownSettings.strings in Resources */ = {isa = PBXBuildFile; fileRef = A60000010000000000000003 /* MarkdownSettings.strings */; };
 		0ABDD5122BB47F1E0054963B /* NSWorkspace+ApplicationName.swift in Sources */ = {isa = PBXBuildFile; fileRef = 0ABDD5112BB47F1E0054963B /* NSWorkspace+ApplicationName.swift */; };
 		21FFF308D9217B43FD4C393F /* VoiceOver.swift in Sources */ = {isa = PBXBuildFile; fileRef = B21DCA6C3D17E48D33D6E608 /* VoiceOver.swift */; };
 		2F0E055F2FFD2EB300CCD1DE /* ReorderableContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2F0E055E2FFD2EAF00CCD1DE /* ReorderableContainer.swift */; };
@@ -202,6 +204,9 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		A60000010000000000000001 /* MarkdownSettingsPane.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MarkdownSettingsPane.swift; sourceTree = "<group>"; };
+		A60000010000000000000004 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/MarkdownSettings.strings; sourceTree = "<group>"; };
+		A60000010000000000000005 /* de */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = de; path = de.lproj/MarkdownSettings.strings; sourceTree = "<group>"; };
 		088F4DA628BECBC40003AD19 /* tr */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = tr; path = tr.lproj/Localizable.strings; sourceTree = "<group>"; };
 		0ABDD5112BB47F1E0054963B /* NSWorkspace+ApplicationName.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "NSWorkspace+ApplicationName.swift"; sourceTree = "<group>"; };
 		11680E44DAF848ADB8BA358E /* pt */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = pt; path = pt.lproj/PinsSettings.strings; sourceTree = "<group>"; };
@@ -727,6 +732,8 @@
 				DA9C3C632C20E1E80056795D /* IgnoreSettingsPane */,
 				DA9C3C442C207AF80056795D /* IgnoreSettingsPane.swift */,
 				DA9C3C482C20D4B40056795D /* IgnoreSettings.strings */,
+				A60000010000000000000001 /* MarkdownSettingsPane.swift */,
+				A60000010000000000000003 /* MarkdownSettings.strings */,
 				DA44C5E32C1C858400819834 /* StorageSettingsPane.swift */,
 				DA689FAE2C1CD3B00009B887 /* StorageSettings.strings */,
 				DAA365CF2C4C147400A394F8 /* PinsSettings.strings */,
@@ -1129,6 +1136,7 @@
 				DA5E62802C39E53F00F4C710 /* PreviewItemView.strings in Resources */,
 				DA009932256411F90030E697 /* README.md in Resources */,
 				DA9C3C4A2C20D4B40056795D /* IgnoreSettings.strings in Resources */,
+				A60000010000000000000006 /* MarkdownSettings.strings in Resources */,
 				42E9C329301B7F9C00B6B55B /* AppIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -1192,6 +1200,7 @@
 				2F1091D72F2B6E8400F5C454 /* AsyncView.swift in Sources */,
 				DAA072E72C423617006DDFD2 /* NSSize+DefaultsSerializable.swift in Sources */,
 				DA9C3C452C207AF80056795D /* IgnoreSettingsPane.swift in Sources */,
+				A60000010000000000000002 /* MarkdownSettingsPane.swift in Sources */,
 				DA13D7D82C1A223E00FA9E23 /* Select.swift in Sources */,
 				2F8A0DBE303A1FA0004BA51F /* ConcatenatedCollection.swift in Sources */,
 				DA689FC82C1D15140009B887 /* PinsPosition.swift in Sources */,
@@ -1308,6 +1317,15 @@
 /* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
+		A60000010000000000000003 /* MarkdownSettings.strings */ = {
+			isa = PBXVariantGroup;
+			children = (
+				A60000010000000000000004 /* en */,
+				A60000010000000000000005 /* de */,
+			);
+			name = MarkdownSettings.strings;
+			sourceTree = "<group>";
+		};
 		4762D6992467226100B3A2BA /* Localizable.strings */ = {
 			isa = PBXVariantGroup;
 			children = (
