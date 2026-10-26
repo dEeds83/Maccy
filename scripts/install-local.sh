@@ -27,7 +27,7 @@ echo "==> Building Release"
 mkdir -p build
 if ! xcodebuild -project Maccy.xcodeproj -scheme Maccy -configuration Release \
   -destination 'platform=macOS' -derivedDataPath build \
-  CODE_SIGN_IDENTITY=- build >"$BUILD_LOG" 2>&1; then
+  CODE_SIGN_IDENTITY=- ENABLE_HARDENED_RUNTIME=NO build >"$BUILD_LOG" 2>&1; then
   tail -n 20 "$BUILD_LOG" >&2
   echo "Build failed. Full log: $BUILD_LOG" >&2
   exit 1
