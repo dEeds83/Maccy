@@ -59,6 +59,16 @@ class Footer: ItemsContainer {
         }
       },
       FooterItem(
+        title: "convert_markdown",
+        help: "convert_markdown_tooltip",
+        isEnabled: { Clipboard.shared.canConvertMarkdown }
+      ) {
+        Task { @MainActor in
+          Clipboard.shared.convertMarkdownInPlace(recordInHistory: true)
+          AppState.shared.popup.close()
+        }
+      },
+      FooterItem(
         title: "preferences",
         shortcuts: [KeyShortcut(key: .comma)]
       ) {

@@ -1,5 +1,6 @@
 "search_placeholder" = "type to search…";
 "clear_tooltip" = "Clear unpinned items.\nSelect with ⇧ to clear all.";
+"convert_markdown_tooltip" = "Convert Markdown on the clipboard to formatted text";
 "clear_all_tooltip" = "Clear all items.";
 "about_tooltip" = "Read more about the application.";
 "quit_tooltip" = "Quit application.";
@@ -7,6 +8,7 @@
 "clear_all" = "Clear all";
 "about" = "About";
 "quit" = "Quit";
+"convert_markdown" = "Markdown → Rich Text";
 "preferences" = "Preferences…";
 "clear_alert_message" = "Are you sure you want to clear the history?";
 "clear_alert_comment" = "You can't undo this action.";

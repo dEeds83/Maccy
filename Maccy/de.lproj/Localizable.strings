@@ -1,5 +1,6 @@
 "search_placeholder" = "Suchen …";
 "clear_tooltip" = "Lösche nur die nicht angehefteten Einträge.\nHalte zusätzlich ⇧ gedrückt, um alle Einträge zu löschen.";
+"convert_markdown_tooltip" = "Markdown in der Zwischenablage in formatierten Text umwandeln";
 "clear_all_tooltip" = "Lösche alle Einträge.";
 "about_tooltip" = "Informationen über die Anwendung.";
 "quit_tooltip" = "Beende die Anwendung.";
@@ -7,6 +8,7 @@
 "clear_all" = "Alle löschen";
 "about" = "Über";
 "quit" = "Beenden";
+"convert_markdown" = "Markdown → Rich Text";
 "preferences" = "Einstellungen…";
 "clear_alert_message" = "Möchtest du den Verlauf wirklich leeren?";
 "clear_alert_comment" = "Diese Aktion kann nicht widerrufen werden.";

@@ -23,6 +23,7 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
   var showConfirmation: Bool = false
   var suppressConfirmation: Binding<Bool>?
   var isVisible: Bool = true
+  var isEnabled: () -> Bool = { true }
   var action: () -> Void
 
   init(
@@ -31,6 +32,7 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
     help: LocalizedStringKey? = nil,
     confirmation: Confirmation? = nil,
     suppressConfirmation: Binding<Bool>? = nil,
+    isEnabled: @escaping () -> Bool = { true },
     action: @escaping () -> Void
   ) {
     self.title = title
@@ -38,6 +40,7 @@ class FooterItem: Equatable, Identifiable, HasVisibility {
     self.help = help
     self.confirmation = confirmation
     self.suppressConfirmation = suppressConfirmation
+    self.isEnabled = isEnabled
     self.action = action
   }
 }

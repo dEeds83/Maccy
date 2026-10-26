@@ -16,6 +16,7 @@ struct FooterItemView: View {
         Text(LocalizedStringKey(item.title))
       }
     }
+    .opacity(item.isEnabled() ? 1 : 0.4)
     .onHover { hovering in
       if hovering && appState.preview.state.isOpen {
         appState.preview.togglePreview()
